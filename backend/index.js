@@ -27,20 +27,20 @@ app.get("/",(req,res)=>{
 
 // Image Storage Engine
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './upload/images'); // Uploads will be stored in the 'uploads' directory
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, './upload/images'); // Uploads will be stored in the 'uploads' directory
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+//     }
+//   });
   
-  const upload = multer({ storage });
+//   const upload = multer({ storage });
 
 
 // Creating Upload Endpoints for images
-app.use("/images",express.static('upload/images'))
+//app.use("/images",express.static('upload/images'))
 
 // app.post("/upload",upload.single('product'),(req,res)=>{
 //     res.json({
@@ -49,12 +49,35 @@ app.use("/images",express.static('upload/images'))
 //     })
 // })
 
-app.post("/upload", upload.single('product'), (req, res) => {
-  res.json({
-    success: 1,
-    image_url: `http://localhost:${port}/images/${req.file.filename}`
-  });
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.post("/upload", upload.single('product'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No file uploaded' });
+  }
+
+  try {
+    const response = await axios.post('https://api.imgur.com/3/image', req.file.buffer, {
+      headers: {
+        'Authorization': `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
+        'Content-Type': req.file.mimetype
+      }
+    });
+
+    if (response.data.success) {
+      res.json({
+        success: true,
+        image_url: response.data.data.link
+      });
+    } else {
+      res.status(500).json({ success: false, message: 'Image upload failed' });
+    }
+  } catch (error) {
+    console.error('Error uploading to Imgur:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
 });
+
 
 // Schema for Creating Products
 
