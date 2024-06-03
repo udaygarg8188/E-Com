@@ -45,114 +45,95 @@ This project is a comprehensive e-commerce platform featuring a frontend develop
 
 ```bash
 git clone https://github.com/udaygarg8188/E-Com
-```
 cd e-commerce-website
-Backend Setup
-Navigate to Backend Directory:
+```
 
-bash
-Copy code
+## Backend Setup
+- **Navigate to Backend Directory**:
+
+```bash
 cd backend
-Install Dependencies:
+```
+- **Install Dependencies**:
 
-bash
-Copy code
+```bash
 npm install
-Create .env File:
+```
+- **Create .env File**:
 
-plaintext
-Copy code
+```bash
 mongo_url=mongodb+srv://your_mongo_url
 secret=your_jwt_secret
 IMGUR_CLIENT_ID=your_imgur_client_id
-Start the Backend Server:
+```
+- **Start the Backend Server**:
 
-bash
-Copy code
+```bash
 npm start
-Frontend Setup
-Navigate to Frontend Directory:
+```
+## Frontend Setup
+- **Navigate to Frontend Directory**:
 
-bash
-Copy code
+```bash
 cd ../frontend
-Install Dependencies:
+```
+- **Install Dependencies**:
 
-bash
-Copy code
+```bash
 npm install
-Create .env File:
+```
+- **Create .env File**:
 
-plaintext
-Copy code
+```bash
 REACT_APP_BACKURL=http://localhost:4000
-Start the Frontend Server:
+```
+- **Start the Frontend Server**:
 
-bash
-Copy code
+```bash
 npm start
-Admin Panel Setup
-Navigate to Admin Panel Directory:
+```
+## Admin Panel Setup
+- **Navigate to Admin Panel Directory**:
 
-bash
-Copy code
-cd ../admin-panel
-Install Dependencies:
+```bash
+cd ../admin
+```
+- **Install Dependencies**:
 
-bash
-Copy code
+```bash
 npm install
-Create .env File:
+```
+- **Create .env File**:
 
-plaintext
-Copy code
+```bash
 REACT_APP_BACKURL=http://localhost:4000
-Start the Admin Panel:
+```
+- **Start the Admin Panel**:
 
-bash
-Copy code
+```bash
 npm run dev
-Usage
-Access the frontend at http://localhost:3000.
-Access the admin panel at http://localhost:3001.
-Project Structure
-Frontend: React application located in the frontend directory.
-Backend: Express and Node.js application located in the backend directory.
-Admin Panel: Vite-powered admin panel located in the admin-panel directory.
-API Endpoints
-User Authentication
-Signup: POST /signup
-Login: POST /login
-Product Management
-Upload Product Image: POST /upload
-Add Product: POST /addproduct
-Remove Product: POST /removeproduct
-Get All Products: GET /allproducts
-Cart Management
-Add to Cart: POST /addtocart
-Remove from Cart: POST /removefromcart
-Get Cart Data: POST /getcart
-Environment Variables
-Ensure the following environment variables are set in your .env files:
+```
+## Usage
+- **Access the frontend at http://localhost:3000.**
+- **Access the admin panel at http://localhost:3001.**
+- **Project Structure**
+- **Frontend: React application located in the frontend directory.**
+- **Backend: Express and Node.js application located in the backend directory.**
+- **Admin Panel: Vite-powered admin panel located in the admin-panel directory.**
+- **API Endpoints**
+- **User Authentication**
+- **Signup: POST /signup**
+- **Login: POST /login**
+- **Product Management**
+- **Upload Product Image: POST /upload**
+- **Add Product: POST /addproduct**
+- **Remove Product: POST /removeproduct**
+- **Get All Products: GET /allproducts**
+- **Cart Management**
+- **Add to Cart: POST /addtocart**
+- **Remove from Cart: POST /removefromcart**
+- **Get Cart Data: POST /getcart**
+- **Environment Variables**
 
-Backend .env
-plaintext
-Copy code
-mongo_url=mongodb+srv://your_mongo_url
-secret=your_jwt_secret
-IMGUR_CLIENT_ID=your_imgur_client_id
-Frontend .env
-plaintext
-Copy code
-REACT_APP_BACKURL=http://localhost:4000
-Admin Panel .env
-plaintext
-Copy code
-REACT_APP_BACKURL=http://localhost:4000
-Contributing
-Fork the repository.
-Create a new branch (git checkout -b feature-branch).
-Make your changes.
-Commit your changes (git commit -m 'Add new feature').
-Push to the branch (git push origin feature-branch).
-Open a Pull Request.
+
+
