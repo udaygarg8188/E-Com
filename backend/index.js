@@ -15,7 +15,9 @@ app.use(express.json());
 app.use(cors());
 
 //Database connection with MongoDB
-mongoose.connect(process.env.mongo_url);
+mongoose.connect(process.env.mongo_url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 //API Creation
 
@@ -103,31 +105,38 @@ app.post('/addproduct',async(req,res)=>{
         old_price:req.body.old_price,
     });
     console.log(product);
-    await product.save();
-    console.log("Saved");
-    res.json({
-        success:true,
-        name:req.body.name,
-    })
+    try {
+        await product.save();
+        res.json({ success: true, name: req.body.name });
+      } catch (err) {
+        console.error('Error saving product:', err);
+        res.status(500).json({ success: false, error: 'Internal server error' });
+      }
 })
 
 // Creating API For deleting Products
 
-app.post('/removeproduct',async (req,res)=>{
-    await Product.findOneAndDelete({id:req.body.id});
-    console.log("Removed");
-    res.json({
-        success:true,
-        name:req.body.name
-    })
-})
+app.post('/removeproduct', async (req, res) => {
+    try {
+      await Product.findOneAndDelete({ id: req.body.id });
+      res.json({ success: true, name: req.body.name });
+    } catch (err) {
+      console.error('Error removing product:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
 
 //Creating API for getting all products
-app.get('/allproducts',async (req,res)=>{
-    let products = await Product.find({});
-    console.log("All Products Fetched");
-    res.send(products);
-})
+app.get('/allproducts', async (req, res) => {
+    try {
+      let products = await Product.find({});
+      res.send(products);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
+  
 
 // Schema creating for User model
 const Users=mongoose.model('Users',{
@@ -205,20 +214,28 @@ app.post('/login',async (req,res)=>{
 })
 
 // creating endpoint for newcollection data
-app.get('/newcollections',async (req,res)=>{
-    let products = await Product.find({});
-    let newcollection = products.slice(1).slice(-8);
-    console.log("NewCollection Fetched");
-    res.send(newcollection);
-})
+app.get('/newcollections', async (req, res) => {
+    try {
+      let products = await Product.find({});
+      let newcollection = products.slice(-8);
+      res.send(newcollection);
+    } catch (err) {
+      console.error('Error fetching new collections:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
 
 //creating endpoint for popular in women category
-app.get('/popularinwomen',async(req,res)=>{
-    let products=await Product.find({category:"women"});
-    let popular_in_women=products.slice(0,4);
-    console.log("Popular in women fetched");
-    res.send(popular_in_women);
-})
+app.get('/popularinwomen', async (req, res) => {
+    try {
+      let products = await Product.find({ category: "women" });
+      let popular_in_women = products.slice(0, 4);
+      res.send(popular_in_women);
+    } catch (err) {
+      console.error('Error fetching popular in women:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
 
 // creating middleware to fetch user
 const fetchUser = async (req,res,next)=>{
@@ -238,30 +255,43 @@ const fetchUser = async (req,res,next)=>{
 }
 
 // creating endpoint for adding proucts in cartdata
-app.post('/addtocart',fetchUser,async (req,res)=>{
-        console.log("added",req.body.itemId);
-        let userData = await Users.findOne({_id:req.user.id});
-        userData.cartData[req.body.itemId] +=1;
-        await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
-        res.send("Added")
-})
+app.post('/addtocart', fetchUser, async (req, res) => {
+    try {
+      let userData = await Users.findOne({ _id: req.user.id });
+      userData.cartData[req.body.itemId] += 1;
+      await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
+      res.send("Added");
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
 
 // creating endpoint to remove product from cartdata
-app.post('/removefromcart',fetchUser,async (req,res)=>{
-        console.log("removed",req.body.itemId);
-        let userData = await Users.findOne({_id:req.user.id});
-        if(userData.cartData[req.body.itemId]>0)
-        userData.cartData[req.body.itemId] -=1;
-        await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
-        res.send("Removed")
-})
+app.post('/removefromcart', fetchUser, async (req, res) => {
+    try {
+      let userData = await Users.findOne({ _id: req.user.id });
+      if (userData.cartData[req.body.itemId] > 0) {
+        userData.cartData[req.body.itemId] -= 1;
+        await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
+      }
+      res.send("Removed");
+    } catch (err) {
+      console.error('Error removing from cart:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
 
 //creating endpoint to get cartdata
-app.post('/getcart',fetchUser,async(req,res)=>{
-    console.log("GetCart");
-    let userData= await Users.findOne({_id:req.user.id});
-    res.json(userData.cartData);
-})
+app.post('/getcart', fetchUser, async (req, res) => {
+    try {
+      let userData = await Users.findOne({ _id: req.user.id });
+      res.json(userData.cartData);
+    } catch (err) {
+      console.error('Error fetching cart data:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    }
+  });
 
 app.listen(port,(error)=>{
     if(!error){
