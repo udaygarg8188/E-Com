@@ -1,4 +1,7 @@
 //if(proccess.env.config!= "PRODUCTION") const dotenv = require("dotenv");
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config();
+  }
 const port = 4000;
 const express = require("express");
 const app = express();
@@ -12,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 //Database connection with MongoDB
-mongoose.connect("mongodb+srv://udaygarg8188:Ecommerce12@cluster0.mvescac.mongodb.net/e-commerce");
+mongoose.connect(process.env.mongo_url);
 
 //API Creation
 
@@ -173,7 +176,7 @@ app.post('/signup',async (req,res)=>{
         }
     }
     
-    const token = jwt.sign(data,'secret_ecom');
+    const token = jwt.sign(data,process.env.secret);
     res.json({success:true,token})
 
 })
@@ -189,7 +192,7 @@ app.post('/login',async (req,res)=>{
                     id:user.id
                 }
             }
-            const token =jwt.sign(data,'secret_ecom');
+            const token =jwt.sign(data,process.env.secret);
             res.json({success:true,token});
         }
         else{
@@ -225,7 +228,7 @@ const fetchUser = async (req,res,next)=>{
     }
     else{
         try {
-            const data = jwt.verify(token,'secret_ecom');
+            const data = jwt.verify(token,process.env.secret);
             req.user = data.user;
             next();
         } catch (error) {
@@ -267,4 +270,6 @@ app.listen(port,(error)=>{
     else{
         console.log("Error : "+error)
     }
-})
+});
+
+module.exports=app;
