@@ -50,18 +50,11 @@ app.use("/images",express.static('upload/images'))
 // })
 
 app.post("/upload", upload.single('product'), (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ success: false, message: 'No file uploaded' });
-      }
-  
-      const imageUrl = `http://localhost:${port}/images/${req.file.filename}`;
-      res.json({ success: true, image_url: imageUrl });
-    } catch (err) {
-      console.error('Error handling image upload:', err);
-      res.status(500).json({ success: false, error: 'Internal server error' });
-    }
+  res.json({
+    success: 1,
+    image_url: `http://localhost:${port}/images/${req.file.filename}`
   });
+});
 
 // Schema for Creating Products
 
