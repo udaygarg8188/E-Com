@@ -28,15 +28,11 @@ app.get("/",(req,res)=>{
 // Image Storage Engine
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './upload/images'); // Uploads will be stored in the 'uploads' directory
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
-  
-  const upload = multer({ storage: storage });
+  destination: "./upload/images",
+  filename: (req, file, cb) => {
+    cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
+  }
+});
 
 
 // Creating Upload Endpoints for images
