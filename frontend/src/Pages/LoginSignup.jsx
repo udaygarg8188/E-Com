@@ -17,7 +17,7 @@ const LoginSignup = () => {
   const login = async () =>{
     console.log("Login Function Executed",formData);
     let responseData;
-    await fetch('http://localhost:4000/login',{
+    await fetch(`${process.env.REACT_APP_BACKURL}/login`,{
       method:'POST',
       headers:{
         Accept:'application/json',
@@ -38,7 +38,7 @@ const LoginSignup = () => {
   const signup = async () =>{
     console.log("Signup Function Executed",formData);
     let responseData;
-    await fetch('http://localhost:4000/signup',{
+    await fetch(`${process.env.REACT_APP_BACKURL}/signup`,{
       method:'POST',
       headers:{
         Accept:'application/json',

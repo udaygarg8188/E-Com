@@ -5,6 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import ShopContextProvider from './Context/ShopContext';
 
+if(process.env.NODE_ENV !== 'production'){
+  require('dotenv').config();
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   
