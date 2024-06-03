@@ -45,6 +45,7 @@ This project is a comprehensive e-commerce platform featuring a frontend develop
 
 ```bash
 git clone https://github.com/udaygarg8188/E-Com
+```
 cd e-commerce-website
 Backend Setup
 Navigate to Backend Directory:
